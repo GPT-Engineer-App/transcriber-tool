@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Button, Badge, Flex, Spacer, useColorModeValue } from "@chakra-ui/react";
+import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Button, Badge, Flex, Spacer, useColorModeValue, Select } from "@chakra-ui/react";
 import { FaRedo } from "react-icons/fa";
 
 const transcriptions = [
@@ -17,6 +17,7 @@ const transcriptions = [
 
 const Index = () => {
   const [data, setData] = useState(transcriptions);
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const handleRerun = (id) => {
     // Simulating rerunning the transcription
@@ -32,10 +33,18 @@ const Index = () => {
   const bgColor = useColorModeValue("white", "gray.800");
   const headerBgColor = useColorModeValue("gray.100", "gray.700");
 
+  const filteredData = filterStatus === "all" ? data : data.filter((item) => item.status === filterStatus);
+
   return (
     <Box p={4}>
       <Flex align="center" mb={4}>
         <Heading size="xl">Transcription Management</Heading>
+        <Spacer />
+        <Select w="200px" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+          <option value="all">All</option>
+          <option value="success">Success</option>
+          <option value="failed">Failed</option>
+        </Select>
         <Spacer />
         <Button colorScheme="blue">Add Transcription</Button>
       </Flex>
@@ -52,7 +61,7 @@ const Index = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((item) => (
+            {filteredData.map((item) => (
               <Tr key={item.id}>
                 <Td>{item.name}</Td>
                 <Td>{item.date}</Td>
